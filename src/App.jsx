@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   CakeSlice,
   Candy,
@@ -14,6 +14,14 @@ import {
   ShieldCheck,
   PartyPopper,
   MessageCircle,
+  ArrowUpRight,
+  BadgeCheck,
+  HeartHandshake,
+  UtensilsCrossed,
+  Package,
+  CalendarDays,
+  Quote,
+  Send,
 } from "lucide-react";
 
 const WHATSAPP_NUMBER = "5511999999999";
@@ -110,6 +118,7 @@ function SecondaryButton({ href, onClick, children, icon: Icon, className }) {
     >
       {Icon ? <Icon className="h-4 w-4" /> : null}
       <span>{children}</span>
+      {href ? <ArrowUpRight className="h-4 w-4 text-slate-500" /> : null}
     </Comp>
   );
 }
@@ -127,6 +136,18 @@ function Card({ className, children }) {
   );
 }
 
+function Stat({ icon: Icon, label, value }) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+        <Icon className="h-4 w-4" />
+        {label}
+      </div>
+      <div className="mt-1 text-xs text-slate-600">{value}</div>
+    </div>
+  );
+}
+
 function Navbar({ onNavigate }) {
   const [open, setOpen] = useState(false);
 
@@ -135,6 +156,7 @@ function Navbar({ onNavigate }) {
       { id: "inicio", label: "Início" },
       { id: "cardapio", label: "Cardápio" },
       { id: "kits", label: "Kits" },
+      { id: "processo", label: "Como funciona" },
       { id: "depoimentos", label: "Depoimentos" },
       { id: "contato", label: "Contato" },
     ],
@@ -266,7 +288,10 @@ function Hero({ onNavigate }) {
           </h1>
 
           <p className="text-pretty text-base leading-relaxed text-slate-600 md:text-lg">
-            A <span className="font-semibold text-slate-900">Lu Festas e Eventos</span>{" "}
+            A{" "}
+            <span className="font-semibold text-slate-900">
+              Lu Festas e Eventos
+            </span>{" "}
             cria bolos, doces finos e kits festa com acabamento premium, sabores
             clássicos e opções personalizadas para o seu tema.
           </p>
@@ -291,33 +316,9 @@ function Hero({ onNavigate }) {
           </div>
 
           <div className="grid grid-cols-1 gap-3 pt-2 sm:grid-cols-3">
-            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                <CheckCircle2 className="h-4 w-4" />
-                Produção artesanal
-              </div>
-              <div className="mt-1 text-xs text-slate-600">
-                Ingredientes selecionados e frescor.
-              </div>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                <Truck className="h-4 w-4" />
-                Entrega sob consulta
-              </div>
-              <div className="mt-1 text-xs text-slate-600">
-                Retirada e entrega para eventos.
-              </div>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                <Star className="h-4 w-4" />
-                Acabamento premium
-              </div>
-              <div className="mt-1 text-xs text-slate-600">
-                Personalização com seu tema.
-              </div>
-            </div>
+            <Stat icon={CheckCircle2} label="Produção artesanal" value="Ingredientes selecionados e frescor." />
+            <Stat icon={Truck} label="Entrega sob consulta" value="Retirada e entrega para eventos." />
+            <Stat icon={Star} label="Acabamento premium" value="Personalização com seu tema." />
           </div>
         </div>
 
@@ -327,57 +328,116 @@ function Hero({ onNavigate }) {
             <div className="grid gap-0 md:grid-cols-2">
               <div className="relative h-56 md:h-full">
                 <img
-                  src="https://images.unsplash.com/photo-1542826438-bd32f43d626f?auto=format&fit=crop&w=1200&q=80"
-                  alt="Bolo decorado"
+                  src="https://images.unsplash.com/photo-1542826438-bd32f43d6b1f?auto=format&fit=crop&w=1200&q=80"
+                  alt="Bolo decorado artesanal"
                   className="h-full w-full object-cover"
                   loading="lazy"
                 />
               </div>
-              <div className="grid gap-4 p-6">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <div className="text-sm font-semibold text-slate-900">
-                      Destaque da semana
-                    </div>
-                    <div className="mt-1 text-xs text-slate-600">
-                      Monte seu kit com tema e cores.
+              <div className="p-6 md:p-7">
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-700">
+                  <BadgeCheck className="h-4 w-4 text-slate-900" />
+                  <span>Mais pedidos da semana</span>
+                </div>
+
+                <div className="mt-4 space-y-3">
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <div className="text-sm font-semibold text-slate-900">
+                          Bolo + Doces finos (tema)
+                        </div>
+                        <div className="mt-1 text-xs text-slate-600">
+                          Ideal para 20–30 pessoas
+                        </div>
+                      </div>
+                      <div className="text-sm font-semibold text-slate-900">
+                        {formatBRL(320)}
+                      </div>
                     </div>
                   </div>
-                  <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white shadow-sm">
-                    Sob encomenda
+
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <div className="text-sm font-semibold text-slate-900">
+                          Kit festa completo
+                        </div>
+                        <div className="mt-1 text-xs text-slate-600">
+                          Bolo + docinhos + salgados
+                        </div>
+                      </div>
+                      <div className="text-sm font-semibold text-slate-900">
+                        {formatBRL(490)}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <div className="text-sm font-semibold text-slate-900">
+                          Mesa de doces (evento)
+                        </div>
+                        <div className="mt-1 text-xs text-slate-600">
+                          Montagem sob orçamento
+                        </div>
+                      </div>
+                      <div className="text-sm font-semibold text-slate-900">
+                        Sob consulta
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+                  <PrimaryButton
+                    href={buildWhatsAppLink({
+                      text: "Olá! Quero um orçamento para um kit festa. Pode me enviar opções e valores?",
+                    })}
+                    icon={MessageCircle}
+                    className="w-full sm:w-auto"
+                  >
+                    Quero um kit
+                  </PrimaryButton>
+                  <SecondaryButton
+                    onClick={() => onNavigate("kits")}
+                    icon={Package}
+                    className="w-full sm:w-auto"
+                  >
+                    Ver kits
+                  </SecondaryButton>
+                </div>
+
+                <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-600">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 shadow-sm">
+                    <CalendarDays className="h-4 w-4 text-slate-900" />
+                    Encomendas com antecedência
+                  </span>
+                  <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 shadow-sm">
+                    <HeartHandshake className="h-4 w-4 text-slate-900" />
+                    Atendimento humanizado
                   </span>
                 </div>
+              </div>
+            </div>
+          </div>
 
-                <div className="grid gap-3">
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                      <Candy className="h-4 w-4" />
-                      Doces finos
-                    </div>
-                    <div className="mt-1 text-xs text-slate-600">
-                      Brigadeiro gourmet, beijinho, ninho e mais.
-                    </div>
-                  </div>
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                      <CakeSlice className="h-4 w-4" />
-                      Bolos personalizados
-                    </div>
-                    <div className="mt-1 text-xs text-slate-600">
-                      Chantininho, buttercream e ganache.
-                    </div>
-                  </div>
-                </div>
-
-                <PrimaryButton
-                  href={buildWhatsAppLink({
-                    text: "Olá! Quero montar um kit festa (bolo + doces). Quais opções você tem?",
-                  })}
-                  icon={MessageCircle}
-                  className="w-full"
-                >
-                  Montar meu kit
-                </PrimaryButton>
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="text-xs font-semibold text-slate-700">
+                Tempo médio de resposta
+              </div>
+              <div className="mt-1 text-lg font-semibold text-slate-900">
+                15–30 min
+              </div>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="text-xs font-semibold text-slate-700">
+                Avaliação dos clientes
+              </div>
+              <div className="mt-1 flex items-center gap-2 text-lg font-semibold text-slate-900">
+                4,9 <Star className="h-5 w-5" />
               </div>
             </div>
           </div>
@@ -388,355 +448,153 @@ function Hero({ onNavigate }) {
 }
 
 function MenuSection() {
-  const items = [
-    {
-      icon: CakeSlice,
-      title: "Bolos personalizados",
-      desc: "Tamanhos para 10 a 80 fatias, com tema, topper e acabamento premium.",
-      tags: ["Chantininho", "Ganache", "Buttercream"],
-    },
-    {
-      icon: Candy,
-      title: "Doces finos & gourmet",
-      desc: "Caixinhas e bandejas com variedade: ninho, pistache, paçoca e mais.",
-      tags: ["Sortidos", "Caixinhas", "Bandejas"],
-    },
-    {
-      icon: Sparkles,
-      title: "Mesa de doces",
-      desc: "Montagem completa com decoração, suportes e reposição sob consulta.",
-      tags: ["Eventos", "Decoração", "Montagem"],
-    },
-  ];
+  const items = useMemo(
+    () => [
+      {
+        icon: CakeSlice,
+        title: "Bolos decorados",
+        desc: "Buttercream, chantininho e temas personalizados.",
+        bullets: ["Topo e acabamento premium", "Sabores clássicos e especiais", "Tamanhos sob medida"],
+      },
+      {
+        icon: Candy,
+        title: "Doces finos",
+        desc: "Brigadeiros gourmet, trufas e mini sobremesas.",
+        bullets: ["Caixinhas para presente", "Opções sem álcool", "Montagem para mesa"],
+      },
+      {
+        icon: UtensilsCrossed,
+        title: "Salgados & combos",
+        desc: "Mini salgados e combos para completar a festa.",
+        bullets: ["Assados e fritos", "Porções por pessoa", "Ideal para kits"],
+      },
+    ],
+    []
+  );
 
-  const flavors = [
-    "Chocolate belga",
-    "Ninho com morango",
-    "Doce de leite",
-    "Red velvet",
-    "Coco cremoso",
-    "Limão siciliano",
-  ];
+  const highlights = useMemo(
+    () => [
+      {
+        title: "Bolo tema (20 pessoas)",
+        price: 220,
+        note: "A partir de",
+      },
+      {
+        title: "100 docinhos gourmet",
+        price: 180,
+        note: "A partir de",
+      },
+      {
+        title: "Kit festa (20 pessoas)",
+        price: 490,
+        note: "A partir de",
+      },
+    ],
+    []
+  );
 
   return (
     <section id="cardapio" className="py-14 md:py-20">
       <div className="mx-auto max-w-6xl px-4 md:px-6">
         <SectionTitle
           eyebrow="Cardápio"
-          title="Clássicos que todo mundo ama, com toque artesanal."
-          subtitle="Escolha o que combina com o seu evento. Personalizamos cores, tema e combinações de sabores."
+          title="Escolha o que combina com o seu evento"
+          subtitle="Opções para aniversários, casamentos e eventos corporativos — com personalização de tema, cores e sabores."
         />
 
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {items.map((it) => (
-            <Card key={it.title}>
+            <Card key={it.title} className="p-7">
               <div className="flex items-start gap-4">
                 <div className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-900 text-white shadow-sm">
-                  <it.icon className="h-5 w-5" />
+                  <it.icon className="h-6 w-6" />
                 </div>
-                <div className="min-w-0">
+                <div>
                   <div className="text-lg font-semibold text-slate-900">
                     {it.title}
                   </div>
-                  <div className="mt-1 text-sm leading-relaxed text-slate-600">
-                    {it.desc}
-                  </div>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {it.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
+                  <div className="mt-1 text-sm text-slate-600">{it.desc}</div>
                 </div>
+              </div>
+
+              <div className="mt-5 grid gap-2">
+                {it.bullets.map((b) => (
+                  <div
+                    key={b}
+                    className="flex items-start gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700"
+                  >
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 text-slate-900" />
+                    <span>{b}</span>
+                  </div>
+                ))}
               </div>
             </Card>
           ))}
         </div>
 
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
-          <Card className="p-0 overflow-hidden">
-            <div className="grid md:grid-cols-2">
-              <div className="relative h-56 md:h-full">
-                <img
-                  src="https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=1200&q=80"
-                  alt="Doces gourmet"
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-              <div className="p-6">
-                <div className="text-sm font-semibold text-slate-900">
-                  Sabores mais pedidos
-                </div>
-                <div className="mt-1 text-sm text-slate-600">
-                  Combinações equilibradas para agradar todos os convidados.
-                </div>
-                <div className="mt-4 grid grid-cols-2 gap-2">
-                  {flavors.map((f) => (
-                    <div
-                      key={f}
-                      className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800"
-                    >
-                      <CheckCircle2 className="h-4 w-4 text-slate-900" />
-                      <span className="truncate">{f}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </Card>
-
-          <Card>
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-lg font-semibold text-slate-900">
-                  Como funciona o pedido
-                </div>
-                <div className="mt-1 text-sm leading-relaxed text-slate-600">
-                  Você escolhe o tipo de produto, informa data e tema, e nós
-                  enviamos opções e valores.
-                </div>
-              </div>
-              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-900 text-white shadow-sm">
-                <Phone className="h-5 w-5" />
-              </div>
-            </div>
-
-            <div className="mt-5 grid gap-3">
-              {[
-                {
-                  title: "1) Conte a data e o tipo de evento",
-                  desc: "Aniversário, casamento, batizado, corporativo.",
-                },
-                {
-                  title: "2) Defina quantidade e preferências",
-                  desc: "Número de convidados, sabores e restrições.",
-                },
-                {
-                  title: "3) Personalização e entrega",
-                  desc: "Tema, cores, retirada ou entrega sob consulta.",
-                },
-              ].map((s) => (
-                <div
-                  key={s.title}
-                  className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
-                >
-                  <div className="text-sm font-semibold text-slate-900">
-                    {s.title}
-                  </div>
-                  <div className="mt-1 text-sm text-slate-600">{s.desc}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <PrimaryButton
-                href={buildWhatsAppLink({
-                  text: "Olá! Quero fazer um pedido. Minha data é __/__/____ e o evento é ____.",
-                })}
-                icon={MessageCircle}
-                className="w-full sm:w-auto"
-              >
-                Iniciar pedido
-              </PrimaryButton>
-              <SecondaryButton
-                href={buildInstagramLink()}
-                icon={Instagram}
-                className="w-full sm:w-auto"
-              >
-                Ver fotos
-              </SecondaryButton>
-            </div>
-          </Card>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function KitsSection() {
-  const kits = [
-    {
-      name: "Kit Festa Essencial",
-      price: 189,
-      desc: "Perfeito para comemorações intimistas.",
-      includes: ["Bolo para 10–12 fatias", "30 doces gourmet", "Topper simples"],
-      highlight: false,
-    },
-    {
-      name: "Kit Festa Completo",
-      price: 329,
-      desc: "O mais pedido para aniversários e mini eventos.",
-      includes: [
-        "Bolo para 20–25 fatias",
-        "60 doces gourmet",
-        "Doces finos (20 un.)",
-        "Topper + plaquinha",
-      ],
-      highlight: true,
-    },
-    {
-      name: "Kit Premium Temático",
-      price: 549,
-      desc: "Para impressionar com variedade e acabamento.",
-      includes: [
-        "Bolo para 35–40 fatias",
-        "100 doces gourmet",
-        "Doces finos (40 un.)",
-        "Personalização avançada",
-      ],
-      highlight: false,
-    },
-  ];
-
-  return (
-    <section id="kits" className="py-14 md:py-20">
-      <div className="mx-auto max-w-6xl px-4 md:px-6">
-        <SectionTitle
-          eyebrow="Kits Festa"
-          title="Escolha um kit e personalize do seu jeito."
-          subtitle="Valores base para referência. Ajustamos sabores, tema e quantidade conforme seu evento."
-        />
-
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {kits.map((k) => (
+        <div className="mt-6 grid gap-6 md:grid-cols-3">
+          {highlights.map((h) => (
             <div
-              key={k.name}
-              className={cn(
-                "rounded-2xl border p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
-                k.highlight
-                  ? "border-slate-900 bg-slate-900 text-white shadow-soft"
-                  : "border-slate-200 bg-white"
-              )}
+              key={h.title}
+              className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <div
-                    className={cn(
-                      "text-lg font-semibold",
-                      k.highlight ? "text-white" : "text-slate-900"
-                    )}
-                  >
-                    {k.name}
+                  <div className="text-sm font-semibold text-slate-900">
+                    {h.title}
                   </div>
-                  <div
-                    className={cn(
-                      "mt-1 text-sm",
-                      k.highlight ? "text-white/80" : "text-slate-600"
-                    )}
-                  >
-                    {k.desc}
-                  </div>
+                  <div className="mt-1 text-xs text-slate-600">{h.note}</div>
                 </div>
-                {k.highlight ? (
-                  <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/20">
-                    Mais pedido
-                  </span>
-                ) : null}
-              </div>
-
-              <div className="mt-6 flex items-end justify-between gap-4">
-                <div>
-                  <div
-                    className={cn(
-                      "text-3xl font-semibold tracking-tight",
-                      k.highlight ? "text-white" : "text-slate-900"
-                    )}
-                  >
-                    {formatBRL(k.price)}
-                  </div>
-                  <div
-                    className={cn(
-                      "text-xs",
-                      k.highlight ? "text-white/70" : "text-slate-500"
-                    )}
-                  >
-                    a partir de
-                  </div>
-                </div>
-                <div
-                  className={cn(
-                    "grid h-12 w-12 place-items-center rounded-2xl shadow-sm",
-                    k.highlight ? "bg-white text-slate-900" : "bg-slate-900 text-white"
-                  )}
-                >
-                  <CakeSlice className="h-5 w-5" />
+                <div className="text-lg font-semibold text-slate-900">
+                  {formatBRL(h.price)}
                 </div>
               </div>
-
-              <div className="mt-6 grid gap-2">
-                {k.includes.map((inc) => (
-                  <div
-                    key={inc}
-                    className={cn(
-                      "flex items-start gap-2 rounded-xl border px-3 py-2 text-sm",
-                      k.highlight
-                        ? "border-white/15 bg-white/5 text-white"
-                        : "border-slate-200 bg-slate-50 text-slate-800"
-                    )}
-                  >
-                    <CheckCircle2
-                      className={cn(
-                        "mt-0.5 h-4 w-4 flex-none",
-                        k.highlight ? "text-white" : "text-slate-900"
-                      )}
-                    />
-                    <span className="leading-relaxed">{inc}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-6">
-                <PrimaryButton
-                  href={buildWhatsAppLink({
-                    text: `Olá! Tenho interesse no ${k.name}. Minha data é __/__/____ e o tema é _____. Pode me passar as opções?`,
-                  })}
-                  icon={MessageCircle}
-                  className={cn(
-                    "w-full",
-                    k.highlight
-                      ? "bg-white text-slate-900 hover:bg-white/90 focus:ring-white/20"
-                      : ""
-                  )}
-                >
-                  Quero esse kit
-                </PrimaryButton>
+              <div className="mt-4 h-px w-full bg-slate-200" />
+              <div className="mt-4 flex items-center justify-between text-xs text-slate-600">
+                <span className="inline-flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-slate-900" />
+                  Produção sob encomenda
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-slate-900" />
+                  Personalizável
+                </span>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
-          <div className="grid gap-6 md:grid-cols-3 md:items-center">
-            <div className="md:col-span-2">
-              <div className="text-lg font-semibold text-slate-900">
-                Precisa de algo 100% sob medida?
+        <div className="mt-10 rounded-2xl border border-slate-200 bg-slate-900 p-6 shadow-soft md:p-8">
+          <div className="grid items-center gap-6 md:grid-cols-[1.2fr_0.8fr]">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide text-white">
+                <Sparkles className="h-4 w-4" />
+                Orçamento rápido
               </div>
-              <div className="mt-1 text-sm leading-relaxed text-slate-600">
-                Montamos kits para qualquer quantidade, com opções sem lactose e
-                sem açúcar sob consulta.
+              <div className="mt-3 text-balance text-2xl font-semibold tracking-tight text-white md:text-3xl">
+                Me diga a data, o tema e a quantidade de pessoas.
+              </div>
+              <div className="mt-2 text-sm leading-relaxed text-white/80">
+                Respondemos com sugestões de sabores, tamanhos e valores para você
+                fechar com segurança.
               </div>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row md:justify-end">
               <SecondaryButton
                 href={buildInstagramLink()}
                 icon={Instagram}
-                className="w-full sm:w-auto"
+                className="w-full border-white/20 bg-white/10 text-white hover:border-white/30 hover:bg-white/15 sm:w-auto"
               >
-                Inspirações
+                Ver Instagram
               </SecondaryButton>
               <PrimaryButton
                 href={buildWhatsAppLink({
-                  text: "Olá! Quero um kit sob medida. Quantas opções vocês têm para meu evento?",
+                  text: "Olá! Quero um orçamento. Data do evento: __/__/__. Tema: __. Quantidade de pessoas: __. Pode me ajudar?",
                 })}
                 icon={MessageCircle}
-                className="w-full sm:w-auto"
+                className="w-full bg-white text-slate-900 hover:bg-slate-100 sm:w-auto"
               >
-                Falar com a Lu
+                Orçar agora
               </PrimaryButton>
             </div>
           </div>
@@ -746,58 +604,323 @@ function KitsSection() {
   );
 }
 
+function KitsSection() {
+  const kits = useMemo(
+    () => [
+      {
+        title: "Kit Festa Essencial",
+        price: 390,
+        people: "Até 15 pessoas",
+        items: ["Bolo decorado", "50 docinhos", "50 salgados"],
+        tag: "Mais vendido",
+      },
+      {
+        title: "Kit Festa Completo",
+        price: 490,
+        people: "Até 20 pessoas",
+        items: ["Bolo decorado", "80 docinhos", "80 salgados", "Mini sobremesa"],
+        tag: "Melhor custo-benefício",
+      },
+      {
+        title: "Kit Premium",
+        price: 690,
+        people: "Até 30 pessoas",
+        items: ["Bolo decorado", "120 docinhos finos", "120 salgados", "Mesa de doces (mini)"],
+        tag: "Para impressionar",
+      },
+    ],
+    []
+  );
+
+  return (
+    <section id="kits" className="py-14 md:py-20">
+      <div className="mx-auto max-w-6xl px-4 md:px-6">
+        <SectionTitle
+          eyebrow="Kits"
+          title="Kits festa prontos para facilitar sua vida"
+          subtitle="Combos equilibrados para você resolver bolo, doces e salgados em um só pedido."
+        />
+
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
+          {kits.map((k, idx) => (
+            <div
+              key={k.title}
+              className={cn(
+                "relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
+                idx === 1 ? "ring-2 ring-slate-900/10" : ""
+              )}
+            >
+              <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-slate-900/5 blur-2xl" />
+              <div className="relative">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">
+                      <Package className="h-4 w-4 text-slate-900" />
+                      {k.tag}
+                    </div>
+                    <div className="mt-3 text-lg font-semibold text-slate-900">
+                      {k.title}
+                    </div>
+                    <div className="mt-1 text-sm text-slate-600">{k.people}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs font-semibold text-slate-600">
+                      a partir de
+                    </div>
+                    <div className="text-2xl font-semibold text-slate-900">
+                      {formatBRL(k.price)}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-5 grid gap-2">
+                  {k.items.map((it) => (
+                    <div
+                      key={it}
+                      className="flex items-start gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm"
+                    >
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 text-slate-900" />
+                      <span>{it}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6">
+                  <PrimaryButton
+                    href={buildWhatsAppLink({
+                      text: `Olá! Quero o ${k.title}. Data do evento: __/__/__. Tema: __. Pode me passar os detalhes?`,
+                    })}
+                    icon={MessageCircle}
+                    className="w-full"
+                  >
+                    Pedir este kit
+                  </PrimaryButton>
+                  <div className="mt-3 flex items-center justify-between text-xs text-slate-600">
+                    <span className="inline-flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-slate-900" />
+                      Sob encomenda
+                    </span>
+                    <span className="inline-flex items-center gap-2">
+                      <Sparkles className="h-4 w-4 text-slate-900" />
+                      Personalizável
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+            <div className="flex items-start gap-4">
+              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-900 text-white shadow-sm">
+                <ShieldCheck className="h-6 w-6" />
+              </div>
+              <div>
+                <div className="text-lg font-semibold text-slate-900">
+                  Segurança e qualidade
+                </div>
+                <div className="mt-1 text-sm leading-relaxed text-slate-600">
+                  Produção artesanal com padrão de acabamento e atenção aos
+                  detalhes. Ajustamos sabores e itens conforme restrições e
+                  preferências.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+            <div className="flex items-start gap-4">
+              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-900 text-white shadow-sm">
+                <Truck className="h-6 w-6" />
+              </div>
+              <div>
+                <div className="text-lg font-semibold text-slate-900">
+                  Retirada ou entrega
+                </div>
+                <div className="mt-1 text-sm leading-relaxed text-slate-600">
+                  Combine o melhor formato para você. Para eventos, avaliamos
+                  logística e horário para chegar tudo perfeito.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProcessSection() {
+  const steps = useMemo(
+    () => [
+      {
+        icon: MessageCircle,
+        title: "1) Você chama no WhatsApp",
+        desc: "Envie data, tema e quantidade de pessoas. Se tiver referência, melhor ainda.",
+      },
+      {
+        icon: Sparkles,
+        title: "2) Montamos a proposta",
+        desc: "Sugerimos sabores, tamanhos e combinações com valores e prazos.",
+      },
+      {
+        icon: CakeSlice,
+        title: "3) Produção artesanal",
+        desc: "Tudo feito sob encomenda, com acabamento premium e atenção aos detalhes.",
+      },
+      {
+        icon: Truck,
+        title: "4) Retirada/entrega",
+        desc: "Você retira ou combinamos entrega (sob consulta) para o seu evento.",
+      },
+    ],
+    []
+  );
+
+  return (
+    <section id="processo" className="py-14 md:py-20">
+      <div className="mx-auto max-w-6xl px-4 md:px-6">
+        <SectionTitle
+          eyebrow="Como funciona"
+          title="Do primeiro contato até a mesa pronta"
+          subtitle="Um processo simples, rápido e com acompanhamento para você ficar tranquila(o)."
+        />
+
+        <div className="mt-10 grid gap-6 md:grid-cols-4">
+          {steps.map((s) => (
+            <Card key={s.title} className="p-7">
+              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-900 text-white shadow-sm">
+                <s.icon className="h-6 w-6" />
+              </div>
+              <div className="mt-4 text-base font-semibold text-slate-900">
+                {s.title}
+              </div>
+              <div className="mt-2 text-sm leading-relaxed text-slate-600">
+                {s.desc}
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+          <div className="grid items-center gap-6 md:grid-cols-[1fr_auto]">
+            <div className="flex items-start gap-4">
+              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-900 text-white shadow-sm">
+                <CalendarDays className="h-6 w-6" />
+              </div>
+              <div>
+                <div className="text-lg font-semibold text-slate-900">
+                  Dica: garanta sua data
+                </div>
+                <div className="mt-1 text-sm leading-relaxed text-slate-600">
+                  Para temas personalizados e eventos maiores, recomendamos
+                  solicitar com antecedência para garantir agenda e melhor
+                  planejamento.
+                </div>
+              </div>
+            </div>
+            <PrimaryButton
+              href={buildWhatsAppLink({
+                text: "Olá! Quero garantir minha data. Evento em __/__/__. Tema: __. Quantidade de pessoas: __.",
+              })}
+              icon={MessageCircle}
+              className="w-full md:w-auto"
+            >
+              Consultar disponibilidade
+            </PrimaryButton>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function TestimonialsSection() {
-  const testimonials = [
-    {
-      name: "Mariana S.",
-      role: "Aniversário infantil",
-      text: "O bolo ficou impecável e os doces sumiram da mesa! Atendimento super atencioso e entrega no horário.",
-      rating: 5,
-    },
-    {
-      name: "Rafael G.",
-      role: "Evento corporativo",
-      text: "Apresentação linda e sabores equilibrados. A equipe elogiou muito. Vamos repetir com certeza.",
-      rating: 5,
-    },
-    {
-      name: "Camila & João",
-      role: "Noivado",
-      text: "Doces finos maravilhosos e tudo muito caprichado. Deu um toque especial na nossa comemoração.",
-      rating: 5,
-    },
-  ];
+  const testimonials = useMemo(
+    () => [
+      {
+        name: "Mariana S.",
+        role: "Aniversário infantil",
+        text: "O bolo ficou impecável e os docinhos estavam maravilhosos. Chegou tudo certinho e muito bem embalado.",
+      },
+      {
+        name: "Rafael P.",
+        role: "Evento corporativo",
+        text: "Atendimento rápido e super profissional. A mesa de doces ficou elegante e todo mundo elogiou.",
+      },
+      {
+        name: "Camila & João",
+        role: "Casamento",
+        text: "Delicado, saboroso e lindo. A Lu entendeu exatamente o que queríamos e entregou além do esperado.",
+      },
+    ],
+    []
+  );
 
   return (
     <section id="depoimentos" className="py-14 md:py-20">
       <div className="mx-auto max-w-6xl px-4 md:px-6">
         <SectionTitle
           eyebrow="Depoimentos"
-          title="Quem prova, recomenda."
-          subtitle="Carinho no atendimento e cuidado em cada detalhe — do sabor à apresentação."
+          title="Quem prova, recomenda"
+          subtitle="Algumas mensagens de clientes que confiaram na Lu Festas e Eventos."
         />
 
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {testimonials.map((t) => (
-            <Card key={t.name}>
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <div className="text-sm font-semibold text-slate-900">
-                    {t.name}
+            <div
+              key={t.name}
+              className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-slate-900/5 blur-2xl" />
+              <div className="relative">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <div className="text-sm font-semibold text-slate-900">
+                      {t.name}
+                    </div>
+                    <div className="mt-1 text-xs text-slate-600">{t.role}</div>
                   </div>
-                  <div className="text-xs text-slate-500">{t.role}</div>
+                  <div className="flex items-center gap-1 text-slate-900">
+                    <Star className="h-4 w-4" />
+                    <Star className="h-4 w-4" />
+                    <Star className="h-4 w-4" />
+                    <Star className="h-4 w-4" />
+                    <Star className="h-4 w-4" />
+                  </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  {Array.from({ length: t.rating }).map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-slate-900" />
-                  ))}
+
+                <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-relaxed text-slate-700">
+                  <div className="flex items-start gap-2">
+                    <Quote className="mt-0.5 h-4 w-4 text-slate-900" />
+                    <p>{t.text}</p>
+                  </div>
                 </div>
               </div>
-              <p className="mt-4 text-sm leading-relaxed text-slate-600">
-                “{t.text}”
-              </p>
-            </Card>
+            </div>
           ))}
+        </div>
+
+        <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+          <div className="grid items-center gap-6 md:grid-cols-[1fr_auto]">
+            <div>
+              <div className="text-lg font-semibold text-slate-900">
+                Quer ver mais fotos e bastidores?
+              </div>
+              <div className="mt-1 text-sm text-slate-600">
+                Acompanhe os trabalhos recentes e novidades no Instagram.
+              </div>
+            </div>
+            <SecondaryButton
+              href={buildInstagramLink()}
+              icon={Instagram}
+              className="w-full md:w-auto"
+            >
+              Abrir Instagram
+            </SecondaryButton>
+          </div>
         </div>
       </div>
     </section>
@@ -806,132 +929,102 @@ function TestimonialsSection() {
 
 function ContactSection() {
   const [name, setName] = useState("");
-  const [eventType, setEventType] = useState("Aniversário");
   const [date, setDate] = useState("");
-  const [guests, setGuests] = useState("");
-  const [message, setMessage] = useState("");
+  const [people, setPeople] = useState("");
+  const [theme, setTheme] = useState("");
+  const [notes, setNotes] = useState("");
 
-  const whatsappText = useMemo(() => {
+  const message = useMemo(() => {
     const parts = [
-      "Olá! Quero um orçamento na Lu Festas e Eventos.",
+      "Olá! Quero um orçamento 😊",
       name ? `Nome: ${name}` : null,
-      eventType ? `Evento: ${eventType}` : null,
-      date ? `Data: ${date}` : null,
-      guests ? `Convidados (aprox.): ${guests}` : null,
-      message ? `Detalhes: ${message}` : null,
+      date ? `Data do evento: ${date}` : null,
+      people ? `Quantidade de pessoas: ${people}` : null,
+      theme ? `Tema/cores: ${theme}` : null,
+      notes ? `Detalhes: ${notes}` : null,
     ].filter(Boolean);
     return parts.join("\n");
-  }, [name, eventType, date, guests, message]);
+  }, [name, date, people, theme, notes]);
 
   return (
     <section id="contato" className="py-14 md:py-20">
       <div className="mx-auto max-w-6xl px-4 md:px-6">
         <SectionTitle
           eyebrow="Contato"
-          title="Vamos planejar seu evento?"
-          subtitle="Envie as informações e receba opções de sabores, tamanhos e valores."
+          title="Vamos montar seu pedido?"
+          subtitle="Envie as informações e abra o WhatsApp com a mensagem pronta."
         />
 
         <div className="mt-10 grid gap-6 md:grid-cols-2">
-          <Card>
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-lg font-semibold text-slate-900">
-                  Solicitar orçamento
-                </div>
-                <div className="mt-1 text-sm text-slate-600">
-                  Preencha e envie direto no WhatsApp.
-                </div>
-              </div>
-              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-900 text-white shadow-sm">
-                <MessageCircle className="h-5 w-5" />
-              </div>
-            </div>
-
-            <form
-              className="mt-6 grid gap-4"
-              onSubmit={(e) => {
-                e.preventDefault();
-                window.open(buildWhatsAppLink({ text: whatsappText }), "_blank");
-              }}
-            >
-              <div className="grid gap-4 sm:grid-cols-2">
-                <label className="grid gap-2">
-                  <span className="text-sm font-semibold text-slate-900">
-                    Seu nome
-                  </span>
-                  <input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 shadow-sm outline-none transition-all duration-200 focus:border-slate-300 focus:ring-2 focus:ring-slate-900/10"
-                    placeholder="Ex.: Luana"
-                    required
-                  />
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <label className="text-sm font-semibold text-slate-900">
+                  Nome
                 </label>
-
-                <label className="grid gap-2">
-                  <span className="text-sm font-semibold text-slate-900">
-                    Tipo de evento
-                  </span>
-                  <select
-                    value={eventType}
-                    onChange={(e) => setEventType(e.target.value)}
-                    className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 shadow-sm outline-none transition-all duration-200 focus:border-slate-300 focus:ring-2 focus:ring-slate-900/10"
-                  >
-                    <option>Aniversário</option>
-                    <option>Casamento</option>
-                    <option>Batizado</option>
-                    <option>Chá revelação</option>
-                    <option>Corporativo</option>
-                    <option>Outro</option>
-                  </select>
-                </label>
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition-all duration-200 focus:border-slate-300 focus:ring-2 focus:ring-slate-900/10"
+                  placeholder="Seu nome"
+                />
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <label className="grid gap-2">
-                  <span className="text-sm font-semibold text-slate-900">
-                    Data
-                  </span>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="grid gap-2">
+                  <label className="text-sm font-semibold text-slate-900">
+                    Data do evento
+                  </label>
                   <input
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 shadow-sm outline-none transition-all duration-200 focus:border-slate-300 focus:ring-2 focus:ring-slate-900/10"
-                    placeholder="Ex.: 20/08/2026"
-                    required
-                  />
-                </label>
-
-                <label className="grid gap-2">
-                  <span className="text-sm font-semibold text-slate-900">
-                    Convidados (aprox.)
-                  </span>
-                  <input
-                    value={guests}
-                    onChange={(e) => setGuests(e.target.value)}
-                    className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 shadow-sm outline-none transition-all duration-200 focus:border-slate-300 focus:ring-2 focus:ring-slate-900/10"
-                    placeholder="Ex.: 30"
+                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition-all duration-200 focus:border-slate-300 focus:ring-2 focus:ring-slate-900/10"
+                    placeholder="dd/mm/aaaa"
                     inputMode="numeric"
                   />
-                </label>
+                </div>
+                <div className="grid gap-2">
+                  <label className="text-sm font-semibold text-slate-900">
+                    Pessoas
+                  </label>
+                  <input
+                    value={people}
+                    onChange={(e) => setPeople(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition-all duration-200 focus:border-slate-300 focus:ring-2 focus:ring-slate-900/10"
+                    placeholder="Ex.: 20"
+                    inputMode="numeric"
+                  />
+                </div>
               </div>
 
-              <label className="grid gap-2">
-                <span className="text-sm font-semibold text-slate-900">
-                  Detalhes do pedido
-                </span>
-                <textarea
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className="min-h-[110px] rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm text-slate-900 shadow-sm outline-none transition-all duration-200 focus:border-slate-300 focus:ring-2 focus:ring-slate-900/10"
-                  placeholder="Tema, cores, sabores preferidos, restrições, se precisa de entrega..."
+              <div className="grid gap-2">
+                <label className="text-sm font-semibold text-slate-900">
+                  Tema/cores
+                </label>
+                <input
+                  value={theme}
+                  onChange={(e) => setTheme(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition-all duration-200 focus:border-slate-300 focus:ring-2 focus:ring-slate-900/10"
+                  placeholder="Ex.: Jardim, rosa e dourado"
                 />
-              </label>
+              </div>
+
+              <div className="grid gap-2">
+                <label className="text-sm font-semibold text-slate-900">
+                  Detalhes (opcional)
+                </label>
+                <textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  className="min-h-[110px] w-full resize-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition-all duration-200 focus:border-slate-300 focus:ring-2 focus:ring-slate-900/10"
+                  placeholder="Sabores, restrições, referências, endereço para entrega..."
+                />
+              </div>
 
               <div className="grid gap-3 sm:grid-cols-2">
                 <PrimaryButton
-                  href={buildWhatsAppLink({ text: whatsappText })}
-                  icon={MessageCircle}
+                  href={buildWhatsAppLink({ text: message })}
+                  icon={Send}
                   className="w-full"
                 >
                   Enviar no WhatsApp
@@ -941,124 +1034,120 @@ function ContactSection() {
                   icon={Instagram}
                   className="w-full"
                 >
-                  Ver Instagram
+                  Falar no Instagram
                 </SecondaryButton>
               </div>
 
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-xs leading-relaxed text-slate-600">
-                Ao enviar, você será direcionado para o WhatsApp com a mensagem
-                pronta. Ajuste os detalhes se quiser antes de enviar.
+                Ao enviar, você será direcionado ao WhatsApp com a mensagem pronta.
+                Ajuste como quiser antes de enviar.
               </div>
-            </form>
-          </Card>
+            </div>
+          </div>
 
           <div className="grid gap-6">
-            <Card>
-              <div className="flex items-start justify-between gap-4">
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+              <div className="flex items-start gap-4">
+                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-900 text-white shadow-sm">
+                  <Phone className="h-6 w-6" />
+                </div>
                 <div>
                   <div className="text-lg font-semibold text-slate-900">
-                    Informações
+                    Atendimento
                   </div>
-                  <div className="mt-1 text-sm text-slate-600">
-                    Atendimento e localização.
-                  </div>
-                </div>
-                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-900 text-white shadow-sm">
-                  <MapPin className="h-5 w-5" />
-                </div>
-              </div>
-
-              <div className="mt-6 grid gap-3">
-                <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <MapPin className="mt-0.5 h-4 w-4 text-slate-900" />
-                  <div>
-                    <div className="text-sm font-semibold text-slate-900">
-                      Endereço
-                    </div>
-                    <div className="text-sm text-slate-600">
-                      {ADDRESS_LINE}
-                      <br />
-                      {CITY_LINE}
-                    </div>
+                  <div className="mt-2 grid gap-2 text-sm text-slate-700">
                     <a
-                      href={buildMapsLink()}
-                      className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-slate-900 underline decoration-slate-300 underline-offset-4 transition-all duration-200 hover:decoration-slate-900"
-                      target="_blank"
-                      rel="noreferrer"
+                      className="inline-flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm transition-all duration-200 hover:shadow-md"
+                      href={buildWhatsAppLink({ text: "Olá! Quero um orçamento 😊" })}
                     >
-                      Ver no mapa <ChevronRight className="h-4 w-4" />
+                      <span className="inline-flex items-center gap-2">
+                        <MessageCircle className="h-4 w-4 text-slate-900" />
+                        WhatsApp
+                      </span>
+                      <ChevronRight className="h-4 w-4 text-slate-500" />
+                    </a>
+
+                    <a
+                      className="inline-flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm transition-all duration-200 hover:shadow-md"
+                      href={buildInstagramLink()}
+                    >
+                      <span className="inline-flex items-center gap-2">
+                        <Instagram className="h-4 w-4 text-slate-900" />
+                        @{INSTAGRAM_HANDLE}
+                      </span>
+                      <ChevronRight className="h-4 w-4 text-slate-500" />
                     </a>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <Clock className="mt-0.5 h-4 w-4 text-slate-900" />
-                  <div>
-                    <div className="text-sm font-semibold text-slate-900">
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+              <div className="flex items-start gap-4">
+                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-900 text-white shadow-sm">
+                  <MapPin className="h-6 w-6" />
+                </div>
+                <div className="w-full">
+                  <div className="text-lg font-semibold text-slate-900">
+                    Localização
+                  </div>
+                  <div className="mt-2 text-sm text-slate-700">
+                    <div className="font-semibold text-slate-900">
+                      {ADDRESS_LINE}
+                    </div>
+                    <div className="text-slate-600">{CITY_LINE}</div>
+                  </div>
+
+                  <div className="mt-4">
+                    <SecondaryButton
+                      href={buildMapsLink()}
+                      icon={MapPin}
+                      className="w-full"
+                    >
+                      Abrir no Maps
+                    </SecondaryButton>
+                  </div>
+
+                  <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+                      <Clock className="h-4 w-4" />
                       Horário
                     </div>
-                    <div className="text-sm text-slate-600">{BUSINESS_HOURS}</div>
+                    <div className="mt-1 text-sm text-slate-600">
+                      {BUSINESS_HOURS}
+                    </div>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <Phone className="mt-0.5 h-4 w-4 text-slate-900" />
-                  <div>
-                    <div className="text-sm font-semibold text-slate-900">
-                      WhatsApp
-                    </div>
-                    <a
-                      href={buildWhatsAppLink({ text: "Olá! Vim pelo site 😊" })}
-                      className="text-sm font-semibold text-slate-900 underline decoration-slate-300 underline-offset-4 transition-all duration-200 hover:decoration-slate-900"
-                      target="_blank"
-                      rel="noreferrer"
+            <div className="rounded-2xl border border-slate-200 bg-slate-900 p-6 shadow-soft md:p-8">
+              <div className="flex items-start gap-4">
+                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-white text-slate-900 shadow-sm">
+                  <Sparkles className="h-6 w-6" />
+                </div>
+                <div>
+                  <div className="text-lg font-semibold text-white">
+                    Personalização de tema
+                  </div>
+                  <div className="mt-1 text-sm leading-relaxed text-white/80">
+                    Envie referências (cores, personagens, estilo) e montamos uma
+                    proposta com acabamento premium.
+                  </div>
+                  <div className="mt-4">
+                    <PrimaryButton
+                      href={buildWhatsAppLink({
+                        text: "Olá! Quero personalizar um bolo/kit. Tema: __. Data: __/__/__. Pessoas: __. Vou enviar referências.",
+                      })}
+                      icon={MessageCircle}
+                      className="w-full bg-white text-slate-900 hover:bg-slate-100"
                     >
-                      Clique para conversar
-                    </a>
-                    <div className="mt-1 text-xs text-slate-600">
-                      Resposta por ordem de chegada.
-                    </div>
+                      Personalizar agora
+                    </PrimaryButton>
                   </div>
                 </div>
               </div>
-            </Card>
-
-            <Card className="p-0 overflow-hidden">
-              <div className="relative h-56">
-                <img
-                  src="https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=1200&q=80"
-                  alt="Mesa de doces"
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-              <div className="p-6">
-                <div className="text-lg font-semibold text-slate-900">
-                  Quer uma mesa completa?
-                </div>
-                <div className="mt-1 text-sm text-slate-600">
-                  Montagem com doces, bolo e decoração sob consulta.
-                </div>
-                <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                  <PrimaryButton
-                    href={buildWhatsAppLink({
-                      text: "Olá! Quero orçamento para mesa completa (bolo + doces + decoração). Minha data é __/__/____.",
-                    })}
-                    icon={MessageCircle}
-                    className="w-full sm:w-auto"
-                  >
-                    Orçar mesa completa
-                  </PrimaryButton>
-                  <SecondaryButton
-                    href={buildInstagramLink()}
-                    icon={Instagram}
-                    className="w-full sm:w-auto"
-                  >
-                    Ver portfólio
-                  </SecondaryButton>
-                </div>
-              </div>
-            </Card>
+            </div>
           </div>
         </div>
       </div>
@@ -1070,13 +1159,13 @@ function Footer({ onNavigate }) {
   return (
     <footer className="border-t border-slate-200 bg-white">
       <div className="mx-auto max-w-6xl px-4 py-10 md:px-6">
-        <div className="grid gap-8 md:grid-cols-3 md:items-start">
-          <div className="space-y-3">
+        <div className="grid gap-8 md:grid-cols-3">
+          <div>
             <div className="inline-flex items-center gap-3">
               <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-900 text-white shadow-sm">
                 <CakeSlice className="h-5 w-5" />
               </div>
-              <div className="leading-tight">
+              <div>
                 <div className="text-sm font-semibold text-slate-900">
                   Lu Festas e Eventos
                 </div>
@@ -1085,75 +1174,61 @@ function Footer({ onNavigate }) {
                 </div>
               </div>
             </div>
-            <p className="text-sm leading-relaxed text-slate-600">
-              Bolos, doces finos e kits festa para transformar sua comemoração em
-              um momento inesquecível.
-            </p>
+            <div className="mt-4 text-sm leading-relaxed text-slate-600">
+              Bolos, doces finos e kits festa para aniversários, casamentos e
+              eventos corporativos.
+            </div>
           </div>
 
           <div className="grid gap-2">
             <div className="text-sm font-semibold text-slate-900">Navegação</div>
             {[
-              { id: "inicio", label: "Início" },
-              { id: "cardapio", label: "Cardápio" },
-              { id: "kits", label: "Kits" },
-              { id: "depoimentos", label: "Depoimentos" },
-              { id: "contato", label: "Contato" },
-            ].map((l) => (
+              ["Início", "inicio"],
+              ["Cardápio", "cardapio"],
+              ["Kits", "kits"],
+              ["Como funciona", "processo"],
+              ["Depoimentos", "depoimentos"],
+              ["Contato", "contato"],
+            ].map(([label, id]) => (
               <button
-                key={l.id}
-                onClick={() => onNavigate(l.id)}
-                className="text-left text-sm font-medium text-slate-600 transition-all duration-200 hover:text-slate-900"
+                key={id}
+                onClick={() => onNavigate(id)}
+                className="inline-flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-semibold text-slate-900 shadow-sm transition-all duration-200 hover:shadow-md"
               >
-                {l.label}
+                <span>{label}</span>
+                <ChevronRight className="h-4 w-4 text-slate-500" />
               </button>
             ))}
           </div>
 
           <div className="grid gap-3">
             <div className="text-sm font-semibold text-slate-900">Contato</div>
-            <a
-              href={buildWhatsAppLink({ text: "Olá! Vim pelo site 😊" })}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+            <SecondaryButton href={buildInstagramLink()} icon={Instagram}>
+              @{INSTAGRAM_HANDLE}
+            </SecondaryButton>
+            <PrimaryButton
+              href={buildWhatsAppLink({
+                text: "Olá! Quero um orçamento 😊",
+              })}
+              icon={MessageCircle}
             >
-              <MessageCircle className="h-4 w-4" />
               WhatsApp
-              <ChevronRight className="ml-auto h-4 w-4 text-slate-500" />
-            </a>
-            <a
-              href={buildInstagramLink()}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <Instagram className="h-4 w-4" />
-              Instagram
-              <ChevronRight className="ml-auto h-4 w-4 text-slate-500" />
-            </a>
-            <a
-              href={buildMapsLink()}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <MapPin className="h-4 w-4" />
-              Localização
-              <ChevronRight className="ml-auto h-4 w-4 text-slate-500" />
-            </a>
+            </PrimaryButton>
+            <SecondaryButton href={buildMapsLink()} icon={MapPin}>
+              Abrir localização
+            </SecondaryButton>
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-3 border-t border-slate-200 pt-6 text-sm text-slate-600 md:flex-row md:items-center md:justify-between">
+        <div className="mt-10 flex flex-col items-start justify-between gap-3 border-t border-slate-200 pt-6 text-xs text-slate-600 md:flex-row md:items-center">
           <div>
             © {new Date().getFullYear()} Lu Festas e Eventos. Todos os direitos
             reservados.
           </div>
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">
-              <Sparkles className="h-4 w-4 text-slate-900" />
-              Feito com carinho
+          <div className="inline-flex items-center gap-2">
+            <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1">
+              <Clock className="h-4 w-4 text-slate-900" />
+              {BUSINESS_HOURS}
             </span>
           </div>
         </div>
@@ -1162,49 +1237,55 @@ function Footer({ onNavigate }) {
   );
 }
 
+function FloatingCTA() {
+  return (
+    <div className="fixed bottom-4 right-4 z-50">
+      <a
+        href={buildWhatsAppLink({ text: "Olá! Quero um orçamento 😊" })}
+        className="group inline-flex items-center gap-3 rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white shadow-soft transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-800"
+        aria-label="Chamar no WhatsApp"
+      >
+        <span className="grid h-9 w-9 place-items-center rounded-xl bg-white/10 transition-all duration-200 group-hover:bg-white/15">
+          <MessageCircle className="h-5 w-5" />
+        </span>
+        <span className="hidden sm:block">Orçar no WhatsApp</span>
+        <span className="sm:hidden">WhatsApp</span>
+      </a>
+    </div>
+  );
+}
+
 export default function App() {
+  const sectionsRef = useRef({});
+
   useEffect(() => {
-    const onHash = () => {
-      const id = window.location.hash?.replace("#", "");
-      if (!id) return;
-      const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    };
-    window.addEventListener("hashchange", onHash);
-    onHash();
-    return () => window.removeEventListener("hashchange", onHash);
+    const ids = ["inicio", "cardapio", "kits", "processo", "depoimentos", "contato"];
+    const map = {};
+    ids.forEach((id) => {
+      map[id] = document.getElementById(id);
+    });
+    sectionsRef.current = map;
   }, []);
 
-  function navigate(id) {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      window.history.replaceState(null, "", `#${id}`);
-    }
+  function onNavigate(id) {
+    const el = sectionsRef.current?.[id] || document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Navbar onNavigate={navigate} />
+    <div className="min-h-screen bg-slate-50 text-slate-900">
+      <Navbar onNavigate={onNavigate} />
       <main>
-        <Hero onNavigate={navigate} />
+        <Hero onNavigate={onNavigate} />
         <MenuSection />
         <KitsSection />
+        <ProcessSection />
         <TestimonialsSection />
         <ContactSection />
       </main>
-      <Footer onNavigate={navigate} />
-
-      <a
-        href={buildWhatsAppLink({ text: "Olá! Vim pelo site 😊" })}
-        target="_blank"
-        rel="noreferrer"
-        className="fixed bottom-4 right-4 inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-soft transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-slate-900/20"
-        aria-label="Falar no WhatsApp"
-      >
-        <MessageCircle className="h-4 w-4" />
-        WhatsApp
-      </a>
+      <Footer onNavigate={onNavigate} />
+      <FloatingCTA />
     </div>
   );
 }
